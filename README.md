@@ -32,7 +32,9 @@ The differentiator: **the assets directory is the config**. Drop a `bash.png` in
   | `plan` | `todo_*`, goal, workflow | `plan.png` → `default.png` |
   | `error` | `agent/error` | `error.png` → `default.png` |
   | `idle` / `default` | nothing active | `default.png` |
+  | `sleep` | after 30 s of continuous idle | `sleep.png` / `{imgs:[...],delay}` |
 
+- Idle cycle: the first 30 s of continuous idle show `default`, the next 30 s switch to the `sleep` frames (500 ms interval), then back to `default`, looping forever. Any tool call, thinking, or error interrupts sleep and restarts the timer.
 - Two ways to configure each action: `"action": "image.png"` (static) or `"action": { "imgs": [...], "delay": 1000 }` (frame animation, delay in ms, default 500).
 - Hot reload: edit an image or `manifest.json` and the pet updates within ~3–4 s. No restart.
 - Draggable with viewport clamping, hover `−/+` size control (100–320 px), click for a status bubble, `×` to hide / 🐾 to bring back.
@@ -89,6 +91,7 @@ assets/
 {
   "default": "default.png",
   "think": { "imgs": ["think1.png", "think2.png", "think3.png"], "delay": 1000 },
+  "sleep": { "imgs": ["sleep1.png", "sleep2.png", "sleep3.png"], "delay": 500 },
   "bash": "bash.png",
   "read": "search.png"
 }

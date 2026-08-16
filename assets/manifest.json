@@ -5,5 +5,9 @@
     "delay": 500
   },
   "search": "search.webp",
-  "read": "search.webp"
+  "read": "search.webp",
+  "sleep": {
+    "imgs": ["sleep1.webp", "sleep2.webp", "sleep3.webp"],
+    "delay": 500
+  }
 }

@@ -32,7 +32,9 @@
   | `plan` | `todo_*`、goal、workflow | `plan.png` → `default.png` |
   | `error` | `agent/error` | `error.png` → `default.png` |
   | `idle` / `default` | 无事发生 | `default.png` |
+  | `sleep` | 连续待机 30 秒后自动入睡 | `sleep.png` / `{imgs:[...],delay}` |
 
+- 待机循环：连续空闲的前 30 秒显示 `default`，后 30 秒自动切到 `sleep` 帧动画（间隔 500ms），随后回到 `default`，一直循环；任何工具调用、思考或报错都会立即打断睡眠并重新计时。
 - 每个动作两种配置：`"动作": "图片.png"`（静态）或 `"动作": { "imgs": [...], "delay": 1000 }`（帧动画，delay 毫秒，缺省 500）。
 - 热更新：改图或改 `manifest.json`，3~4 秒生效，无需重启。
 - 可拖拽（视口内钳制）、悬停 `−/+` 调尺寸（100~320px）、点击冒状态气泡、`×` 隐藏 / 🐾 唤回。
@@ -89,6 +91,7 @@ assets/
 {
   "default": "default.png",
   "think": { "imgs": ["think1.png", "think2.png", "think3.png"], "delay": 1000 },
+  "sleep": { "imgs": ["sleep1.png", "sleep2.png", "sleep3.png"], "delay": 500 },
   "bash": "bash.png",
   "read": "search.png"
 }
