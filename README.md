@@ -37,7 +37,8 @@ The differentiator: **the assets directory is the config**. Drop a `bash.png` in
   | `idle` / `default` | nothing active | `default.png` |
   | `sleep` | after 30 s of continuous idle | `sleep.png` / `{imgs:[...],delay}` |
 
-- Subagent working indicator: while any subagent is running, a badge at viewport-fixed position **(58, 397)** (top-left corner) cycles the `subagent_working1~3` frames (500 ms interval); at start/end the pet flashes the `subagent` pose for ~4 s. The pose flash and the running indicator are independent.
+- Subagent working indicator: while any subagent is running, a badge **pinned inside the pet image** (top-left at ~4.63% / 31.66% of the pet, sized ~26.63% × 36.92% — matching a 334×463 badge on a 1254×1254 pet sprite) cycles the `subagent_working1~3` frames (500 ms interval). Because it lives inside the pet's own container it follows drag and resize. At start/end the pet flashes the `subagent` pose for ~2 s, and the badge lingers ~2 s after the last subagent settles so both disappear in sync. The pose flash and the running indicator are independent.
+- Subagent isolation: tool calls, status and error events **originating from live subagents are ignored** — only the main agent's activity drives the pet pose. So a foreground subagent keeps the pet in the `subagent` pose for its whole run, and a background subagent never steals the pose from the main agent's ongoing work.
 
 - Idle sleep: after 30 s of continuous idle the pet falls asleep (`sleep` frames, 500 ms interval) and stays asleep; **click the pet to wake it** back to `default` and restart the countdown — 30 s later it sleeps again. Any tool call, thinking, or error also interrupts sleep and restarts the timer.
 - Two ways to configure each action: `"action": "image.png"` (static) or `"action": { "imgs": [...], "delay": 1000 }` (frame animation, delay in ms, default 500).
