@@ -9,5 +9,9 @@
   "sleep": {
     "imgs": ["sleep1.webp", "sleep2.webp", "sleep3.webp"],
     "delay": 500
+  },
+  "subagent": {
+    "imgs": ["subagent1.webp", "subagent2.webp", "subagent3.webp"],
+    "delay": 500
   }
 }

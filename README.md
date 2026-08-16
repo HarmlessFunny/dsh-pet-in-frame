@@ -32,6 +32,7 @@ The differentiator: **the assets directory is the config**. Drop a `bash.png` in
   | `edit` | `edit`, `write` | `edit.png` → `default.png` |
   | `plan` | `todo_*`, goal, workflow | `plan.png` → `default.png` |
   | `ask` | `ask_user_question` | `ask.png` → `default.png` |
+  | `subagent` | `subagent`, `subagent_fork`, `send_message` | `subagent.png` / `{imgs:[...],delay}` |
   | `error` | `agent/error` | `error.png` → `default.png` |
   | `idle` / `default` | nothing active | `default.png` |
   | `sleep` | after 30 s of continuous idle | `sleep.png` / `{imgs:[...],delay}` |

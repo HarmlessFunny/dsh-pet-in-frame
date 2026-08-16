@@ -32,6 +32,7 @@
   | `edit` | `edit`、`write` | `edit.png` → `default.png` |
   | `plan` | `todo_*`、goal、workflow | `plan.png` → `default.png` |
   | `ask` | `ask_user_question` | `ask.png` → `default.png` |
+  | `subagent` | `subagent`、`subagent_fork`、`send_message` | `subagent.png` / `{imgs:[...],delay}` |
   | `error` | `agent/error` | `error.png` → `default.png` |
   | `idle` / `default` | 无事发生 | `default.png` |
   | `sleep` | 连续待机 30 秒后自动入睡 | `sleep.png` / `{imgs:[...],delay}` |
