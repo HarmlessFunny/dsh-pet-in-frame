@@ -1,44 +1,79 @@
 # dsh-pet-in-frame
 
-Agent 桌面宠物插件（DeepSeek Harness）——一只悬浮在页面右下角的小宠物，会随着 Agent 的状态和工具调用切换姿态：思考、查资料、跑命令、改文件、出错、空闲。支持**静态单图**和**多帧动画**（翻转书式轮播），图片与配置支持热更新。
+[English](README.md) | [中文](README.zh.md)
 
-一个能打的差异点：素材目录即配置——丢一张 `bash.png` 进去，跑命令时自动换图；丢一组帧 + 写一行 manifest，就能做出动画。
+A single-package [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) plugin: a small desktop pet that floats in the corner of the Web GUI and reacts to what the agent is doing — thinking, searching the web, reading code, running commands, editing files, hitting an error, or idling.
 
-## 特性
+One package = one bundle = one loader row. The host half listens to the agent lifecycle (`agent/status`, `tools/execute`, `tools/result`, `agent/error`), watches the `assets/` directory for image and `manifest.json` changes, and serves four HTTP routes (`/dsh-pet-in-frame/state`, `/texts`, `/frames/<action>`, `/assets/<file>`). The browser half registers the pet into `shell.overlay`, polls `state`, and swaps static poses or cycles frame animations.
 
-- 🐾 按 Agent 状态/工具自动换姿态：
-  `think`（思考）、`search`（web_search/web_fetch）、`read`（read/glob/grep）、`bash`（bash/pwsh）、`edit`（edit/write）、`plan`（todo/goal/workflow）、`error`、`idle`
-- 🖼️ 每个动作两种配置：`"动作": "图片.png"`（静态）或 `"动作": {"imgs": [...], "delay": 1000}`（帧动画）
-- 🔄 图片/配置文件热更新：改图或改 `manifest.json`，3~4 秒生效，无需重启
-- 🖱️ 拖拽移动（边界钳制）、悬停 ± 尺寸调节（100~320px）、点击气泡、× 隐藏 / 🐾 唤回
-- 🧩 无需构建：纯 JavaScript（Node ESM Host + `window.__ModuleLoader__` Client）
+The differentiator: **the assets directory is the config**. Drop a `bash.png` into `assets/` and the pet shows it whenever a command runs; add a frame list plus one `manifest.json` line and you get an animation. No rebuild, no code change — changes hot-reload within a few seconds.
 
-## 安装
+## Features
 
-1. 把本仓库放进你的 DSH 环境可访问的路径（例如 `E:\DeepSeek\dsh-pet-in-frame`）。
-2. 找到你的 **web profile** 目录（通常是 `~/.dsh/profiles/web`），在它的 `package.json` 里：
-   - `dsh.profile.bundles` 数组追加 `"dsh-pet-in-frame"`
-   - `dependencies` 追加 `"dsh-pet-in-frame": "file:<本仓库路径>"`
-3. 在 profile 目录执行 `pnpm install`。
-4. **重启 DSH web 进程**（新插件条目在启动时加载）。
+- Poses switch with agent state and tool calls:
 
-> 包内的 `cordis.patch.yml` 会自动把 `dsh-pet-in-frame` 行插入组合，无需手改 profile 的 `cordis.yml`。
+  | Action | Triggered by | Image |
+  |---|---|---|
+  | `think` | running, no active tool | `think.png` / `{imgs:[...],delay}` |
+  | `search` | `web_search`, `web_fetch` | `search.png` |
+  | `read` | `read`, `glob`, `grep` | `read.png` → `search.png` → `default.png` |
+  | `bash` | `bash`, `pwsh` | `bash.png` → `default.png` |
+  | `edit` | `edit`, `write` | `edit.png` → `default.png` |
+  | `plan` | `todo_*`, goal, workflow | `plan.png` → `default.png` |
+  | `error` | `agent/error` | `error.png` → `default.png` |
+  | `idle` / `default` | nothing active | `default.png` |
 
-## 素材配置
+- Two ways to configure each action: `"action": "image.png"` (static) or `"action": { "imgs": [...], "delay": 1000 }` (frame animation, delay in ms, default 500).
+- Hot reload: edit an image or `manifest.json` and the pet updates within ~3–4 s. No restart.
+- Draggable with viewport clamping, hover `−/+` size control (100–320 px), click for a status bubble, `×` to hide / 🐾 to bring back.
+- No build step: plain JavaScript (Node ESM host + `window.__ModuleLoader__` client).
 
-所有图片放在本包的 `assets/` 目录（也可通过 `DSH_PET_ASSETS` 环境变量或组合行 `config.assetsDir` 指向其他目录）。
+## Install
 
-**方式一：文件名约定（零配置）**——`动作名.扩展名`（png/jpg/jpeg/gif/webp/svg），放进去自动生效：
+Prereqs: a running dsh `web` profile, pnpm available to the `dsh` CLI.
+
+**From this repository (recommended, pin a commit):**
+
+```sh
+dsh plugin --profile web add github:<your-account>/dsh-pet-in-frame#<commit-sha>
+```
+
+**From npm (once published):**
+
+```sh
+dsh plugin --profile web add dsh-pet-in-frame
+```
+
+**From a local checkout:**
+
+```sh
+dsh plugin --profile web add file:E:/path/to/dsh-pet-in-frame
+```
+
+Then **restart the dsh web process** — new plugin entries load at boot. The package's `cordis.patch.yml` inserts its own loader row, so no manual `cordis.yml` edits are needed.
+
+## Assets & configuration
+
+Images live in the package's `assets/` directory. You can point elsewhere with the `DSH_PET_ASSETS` environment variable or a `config.assetsDir` on the loader row:
+
+```yaml
+- id: dsh-pet-in-frame
+  name: dsh-pet-in-frame
+  config:
+    assetsDir: C:/path/to/your/assets
+```
+
+**Convention mode (zero config)** — `assets/<action>.<ext>`, extensions `png/jpg/jpeg/gif/webp/svg`:
 
 ```
 assets/
-├── default.png   # 兜底
-├── think.png     # 思考
-├── search.png    # 查资料 / 翻代码（read 会回退到这里）
-└── bash.png      # （可选）跑命令，缺省回退 default.png
+├── default.png   # fallback
+├── think.png     # thinking
+├── search.png    # web search / code reading
+└── bash.png      # optional; falls back to default.png
 ```
 
-**方式二：`manifest.json`**——精确控制，支持动画：
+**`manifest.json`** — explicit control, including animations:
 
 ```json
 {
@@ -49,26 +84,36 @@ assets/
 }
 ```
 
-- 字符串 = 静态单图；对象 `{imgs, delay}` = 帧动画（`delay` 毫秒轮播，缺省 500ms）
-- 引用的文件缺失会自动跳过；manifest 非法 JSON 会被忽略并退回文件名约定
-- 没在 manifest 里写的动作仍走文件名约定 → 回退链（`read` → `search` → `default`）
+- String = static single image; object `{imgs, delay}` = frame animation.
+- Files that don't exist are skipped; a malformed manifest is ignored and the filename convention is used instead.
+- Actions missing from the manifest still resolve via the convention → fallback chain.
 
-## 仓库结构
+## How it works
 
-```
-dsh-pet-in-frame/
-├── package.json       # dsh.client 声明 + exports["./client"]
-├── cordis.patch.yml   # 自动插入组合行
-├── lib/
-│   ├── index.js       # Host 半：事件管道 + HTTP 路由 + 热更新
-│   └── client.js      # Client 半：宠物 UI（__ModuleLoader__）
-├── assets/            # 你的图片 + manifest.json
-├── README.md
-└── LICENSE
-```
+The host half exposes four loopback routes:
 
-Host 面提供四个 HTTP 端点：`/dsh-pet-in-frame/state`（状态+rev）、`/texts`（气泡文案）、`/frames/<动作>`（帧列表）、`/assets/<文件>`（图片）。
+| Route | Returns |
+|---|---|
+| `/dsh-pet-in-frame/state` | `{ status, action, tool, error, rev }` |
+| `/dsh-pet-in-frame/texts` | bubble copy for each action |
+| `/dsh-pet-in-frame/frames/<action>` | `{ frames: [url...], delay }` (URLs carry the current `rev`) |
+| `/dsh-pet-in-frame/assets/<file>` | image bytes |
 
-## 许可
+The client polls `state` every second and refetches frames whenever `rev` changes, so image and manifest edits propagate without a reload.
 
-MIT
+## Security
+
+- Only the configured assets directory is served; filenames must match `[\w.-]+`, so no path traversal.
+- The manifest is parsed with `JSON.parse` and treated as data only; a bad manifest degrades to the convention mode.
+- Routes are read-only GETs; nothing the client sends is written anywhere.
+
+## Known pitfalls
+
+- **Restart required after install** — new bundle entries load at boot; the browser bundle also needs a page refresh.
+- **The assets directory is the source of truth** after install. If you previously pointed a dynamic plugin at `~/Desktop/assets`, copy those files into the package's `assets/` (or set `DSH_PET_ASSETS`).
+- **Pet display is process-wide.** This is a host-plane plugin, so events from all sessions contribute to the same pet — fine for a single-user deployment.
+- **Frame animations are flipbook-style**: several static images cycled by a timer. For many frames prefer a single sprite/GIF.
+
+## License
+
+[MIT](LICENSE). Copyright (c) 2025 dsh-pet-in-frame contributors.
