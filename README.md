@@ -88,6 +88,8 @@ assets/
 - Files that don't exist are skipped; a malformed manifest is ignored and the filename convention is used instead.
 - Actions missing from the manifest still resolve via the convention → fallback chain.
 
+**Asset optimization**: originals are usually 1254px+ while the pet displays at most 320px — shipping them raw slows first load noticeably. Run `scripts/optimize-assets.cjs` to downscale to 512px WebP (~1/10 the size) in place, then update `manifest.json` to the `.webp` names.
+
 ## How it works
 
 The host half exposes four loopback routes:

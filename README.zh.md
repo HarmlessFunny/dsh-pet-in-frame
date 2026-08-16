@@ -88,6 +88,8 @@ assets/
 - 不存在的文件自动跳过；manifest 写坏了会被忽略、退回文件名约定。
 - manifest 没写的动作仍走约定 → 回退链。
 
+**素材优化**：原图通常是 1254px+ 的大图，宠物最多显示 320px，直接放会明显拖慢加载。用 `scripts/optimize-assets.cjs` 一键压成 512px WebP（体积约 1/10）并原地替换，跑完把 `manifest.json` 里的文件名改成 `.webp`。
+
 ## 工作原理
 
 Host 半提供四个路由：
