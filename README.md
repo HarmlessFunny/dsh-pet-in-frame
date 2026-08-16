@@ -12,11 +12,11 @@ The differentiator: **the assets directory is the config**. Drop a `bash.png` in
 
 **Explore screen** — the pet idles in the bottom-right corner:
 
-![Idle on the explore screen](screenshots/01-hero-idle.jpg)
+![Idle on the explore screen](https://raw.githubusercontent.com/HarmlessFunny/dsh-pet-in-frame/main/screenshots/01-hero-idle.jpg)
 
 **In a conversation** — the pet switches poses with the agent's activity and shows a status bubble on click:
 
-![Pet during a conversation](screenshots/02-chat-bubble.jpg)
+![Pet during a conversation](https://raw.githubusercontent.com/HarmlessFunny/dsh-pet-in-frame/main/screenshots/02-chat-bubble.jpg)
 
 ## Features
 

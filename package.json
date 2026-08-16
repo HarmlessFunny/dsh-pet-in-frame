@@ -35,5 +35,13 @@
     "agent",
     "plugin"
   ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HarmlessFunny/dsh-pet-in-frame.git"
+  },
+  "bugs": {
+    "url": "https://github.com/HarmlessFunny/dsh-pet-in-frame/issues"
+  },
+  "homepage": "https://github.com/HarmlessFunny/dsh-pet-in-frame#readme",
   "license": "MIT"
 }

@@ -12,11 +12,11 @@
 
 **主界面（探索页）** — 宠物常驻右下角，待机姿态：
 
-![主界面待机](screenshots/01-hero-idle.jpg)
+![主界面待机](https://raw.githubusercontent.com/HarmlessFunny/dsh-pet-in-frame/main/screenshots/01-hero-idle.jpg)
 
 **对话中** — 宠物跟随 Agent 状态换姿态，点击显示状态气泡：
 
-![对话中](screenshots/02-chat-bubble.jpg)
+![对话中](https://raw.githubusercontent.com/HarmlessFunny/dsh-pet-in-frame/main/screenshots/02-chat-bubble.jpg)
 
 ## 特性
 
