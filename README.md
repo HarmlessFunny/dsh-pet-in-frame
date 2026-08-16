@@ -42,19 +42,19 @@ The differentiator: **the assets directory is the config**. Drop a `bash.png` in
 
 Prereqs: a running dsh `web` profile, pnpm available to the `dsh` CLI.
 
-**From this repository (recommended, pin a commit):**
-
-```sh
-dsh plugin --profile web add github:<your-account>/dsh-pet-in-frame#<commit-sha>
-```
-
-**From npm (once published):**
+**From npm (recommended):**
 
 ```sh
 dsh plugin --profile web add dsh-pet-in-frame
 ```
 
-**From a local checkout:**
+**From GitHub (pin a commit for auditability):**
+
+```sh
+dsh plugin --profile web add github:HarmlessFunny/dsh-pet-in-frame#<commit-sha>
+```
+
+**From a local checkout (development):**
 
 ```sh
 dsh plugin --profile web add file:E:/path/to/dsh-pet-in-frame

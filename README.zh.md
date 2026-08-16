@@ -42,19 +42,19 @@
 
 前置：可用的 dsh `web` profile，`dsh` CLI 能调用 pnpm。
 
-**从本仓库（推荐，固定 commit）：**
-
-```sh
-dsh plugin --profile web add github:<你的账号>/dsh-pet-in-frame#<commit-sha>
-```
-
-**从 npm（发布后）：**
+**从 npm（推荐）：**
 
 ```sh
 dsh plugin --profile web add dsh-pet-in-frame
 ```
 
-**本地目录：**
+**从 GitHub（固定 commit，可审计）：**
+
+```sh
+dsh plugin --profile web add github:HarmlessFunny/dsh-pet-in-frame#<commit-sha>
+```
+
+**本地目录（开发）：**
 
 ```sh
 dsh plugin --profile web add file:E:/path/to/dsh-pet-in-frame
