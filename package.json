@@ -1,0 +1,39 @@
+{
+  "name": "dsh-pet-in-frame",
+  "version": "0.1.0",
+  "description": "Agent desktop pet overlay for DeepSeek Harness: static or frame-animated poses that react to agent status and tool calls.",
+  "type": "module",
+  "main": "lib/index.js",
+  "exports": {
+    ".": "./lib/index.js",
+    "./client": "./lib/client.js",
+    "./package.json": "./package.json"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "inject": [
+        "@deepseek-ai/dsh-client-runtime"
+      ],
+      "platform": "web"
+    }
+  },
+  "files": [
+    "lib/index.js",
+    "lib/client.js",
+    "cordis.patch.yml",
+    "assets/",
+    "README.md",
+    "LICENSE"
+  ],
+  "keywords": [
+    "deepseek-harness",
+    "dsh",
+    "desktop-pet",
+    "agent",
+    "plugin"
+  ],
+  "license": "MIT"
+}

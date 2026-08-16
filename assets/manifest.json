@@ -1,0 +1,9 @@
+{
+  "default": "default.png",
+  "think": {
+    "imgs": ["think1.png","think2.png","think3.png"],
+    "delay": 500
+  },
+  "search": "search.png",
+  "read": "search.png"
+}
