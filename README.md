@@ -8,6 +8,16 @@ One package = one bundle = one loader row. The host half listens to the agent li
 
 The differentiator: **the assets directory is the config**. Drop a `bash.png` into `assets/` and the pet shows it whenever a command runs; add a frame list plus one `manifest.json` line and you get an animation. No rebuild, no code change — changes hot-reload within a few seconds.
 
+## Screenshots
+
+**Explore screen** — the pet idles in the bottom-right corner:
+
+![Idle on the explore screen](screenshots/01-hero-idle.jpg)
+
+**In a conversation** — the pet switches poses with the agent's activity and shows a status bubble on click:
+
+![Pet during a conversation](screenshots/02-chat-bubble.jpg)
+
 ## Features
 
 - Poses switch with agent state and tool calls:
