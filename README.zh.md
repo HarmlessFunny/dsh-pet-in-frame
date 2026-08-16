@@ -32,10 +32,12 @@
   | `edit` | `edit`、`write` | `edit.png` → `default.png` |
   | `plan` | `todo_*`、goal、workflow | `plan.png` → `default.png` |
   | `ask` | `ask_user_question` | `ask.png` → `default.png` |
-  | `subagent` | `subagent`、`subagent_fork`、`send_message` | `subagent.png` / `{imgs:[...],delay}` |
+  | `subagent` | `subagent/start`、`subagent/end` 事件(也含工具派发) | `subagent.png` → `default.png` |
   | `error` | `agent/error` | `error.png` → `default.png` |
   | `idle` / `default` | 无事发生 | `default.png` |
   | `sleep` | 连续待机 30 秒后自动入睡 | `sleep.png` / `{imgs:[...],delay}` |
+
+- 子代理运行指示器：只要有子代理在运行，视口固定位置 **(58, 397)**（元素左上角）会显示 `subagent_working1~3` 帧动画（500ms 间隔）；启动/结束瞬间宠物会闪现 `subagent` 姿态约 4 秒。姿态闪显与运行指示器相互独立。
 
 - 待机睡眠：连续空闲 30 秒后自动入睡（`sleep` 帧动画，500ms 间隔），之后一直睡；**点击宠物唤醒**回 `default` 并重新计时，再空闲 30 秒又入睡。任何工具调用、思考或报错也会打断睡眠并重新计时。
 - 每个动作两种配置：`"动作": "图片.png"`（静态）或 `"动作": { "imgs": [...], "delay": 1000 }`（帧动画，delay 毫秒，缺省 500）。

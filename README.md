@@ -32,10 +32,12 @@ The differentiator: **the assets directory is the config**. Drop a `bash.png` in
   | `edit` | `edit`, `write` | `edit.png` → `default.png` |
   | `plan` | `todo_*`, goal, workflow | `plan.png` → `default.png` |
   | `ask` | `ask_user_question` | `ask.png` → `default.png` |
-  | `subagent` | `subagent`, `subagent_fork`, `send_message` | `subagent.png` / `{imgs:[...],delay}` |
+  | `subagent` | `subagent/start`, `subagent/end` events (and tool dispatch) | `subagent.png` → `default.png` |
   | `error` | `agent/error` | `error.png` → `default.png` |
   | `idle` / `default` | nothing active | `default.png` |
   | `sleep` | after 30 s of continuous idle | `sleep.png` / `{imgs:[...],delay}` |
+
+- Subagent working indicator: while any subagent is running, a badge at viewport-fixed position **(58, 397)** (top-left corner) cycles the `subagent_working1~3` frames (500 ms interval); at start/end the pet flashes the `subagent` pose for ~4 s. The pose flash and the running indicator are independent.
 
 - Idle sleep: after 30 s of continuous idle the pet falls asleep (`sleep` frames, 500 ms interval) and stays asleep; **click the pet to wake it** back to `default` and restart the countdown — 30 s later it sleeps again. Any tool call, thinking, or error also interrupts sleep and restarts the timer.
 - Two ways to configure each action: `"action": "image.png"` (static) or `"action": { "imgs": [...], "delay": 1000 }` (frame animation, delay in ms, default 500).
