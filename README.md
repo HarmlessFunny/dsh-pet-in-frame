@@ -34,7 +34,7 @@ The differentiator: **the assets directory is the config**. Drop a `bash.png` in
   | `idle` / `default` | nothing active | `default.png` |
   | `sleep` | after 30 s of continuous idle | `sleep.png` / `{imgs:[...],delay}` |
 
-- Idle cycle: the first 30 s of continuous idle show `default`, the next 30 s switch to the `sleep` frames (500 ms interval), then back to `default`, looping forever. Any tool call, thinking, or error interrupts sleep and restarts the timer.
+- Idle sleep: after 30 s of continuous idle the pet falls asleep (`sleep` frames, 500 ms interval) and stays asleep; **click the pet to wake it** back to `default` and restart the countdown — 30 s later it sleeps again. Any tool call, thinking, or error also interrupts sleep and restarts the timer.
 - Two ways to configure each action: `"action": "image.png"` (static) or `"action": { "imgs": [...], "delay": 1000 }` (frame animation, delay in ms, default 500).
 - Hot reload: edit an image or `manifest.json` and the pet updates within ~3–4 s. No restart.
 - Draggable with viewport clamping, hover `−/+` size control (100–320 px), click for a status bubble, `×` to hide / 🐾 to bring back.
@@ -105,14 +105,15 @@ assets/
 
 ## How it works
 
-The host half exposes four loopback routes:
+The host half exposes five loopback routes:
 
 | Route | Returns |
 |---|---|
-| `/dsh-pet-in-frame/state` | `{ status, action, tool, error, rev }` |
+| `/dsh-pet-in-frame/state` | `{ status, action, tool, error, idleMs, rev }` |
 | `/dsh-pet-in-frame/texts` | bubble copy for each action |
 | `/dsh-pet-in-frame/frames/<action>` | `{ frames: [url...], delay }` (URLs carry the current `rev`) |
 | `/dsh-pet-in-frame/assets/<file>` | image bytes |
+| `/dsh-pet-in-frame/wake` | `POST`; wake the pet and reset the idle countdown on click |
 
 The client polls `state` every second and refetches frames whenever `rev` changes, so image and manifest edits propagate without a reload.
 
@@ -120,7 +121,7 @@ The client polls `state` every second and refetches frames whenever `rev` change
 
 - Only the configured assets directory is served; filenames must match `[\w.-]+`, so no path traversal.
 - The manifest is parsed with `JSON.parse` and treated as data only; a bad manifest degrades to the convention mode.
-- Routes are read-only GETs; nothing the client sends is written anywhere.
+- Routes are read-only GETs except `POST /wake`, which only resets a timer (no request body read, nothing written).
 
 ## Known pitfalls
 

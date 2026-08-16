@@ -34,7 +34,7 @@
   | `idle` / `default` | 无事发生 | `default.png` |
   | `sleep` | 连续待机 30 秒后自动入睡 | `sleep.png` / `{imgs:[...],delay}` |
 
-- 待机循环：连续空闲的前 30 秒显示 `default`，后 30 秒自动切到 `sleep` 帧动画（间隔 500ms），随后回到 `default`，一直循环；任何工具调用、思考或报错都会立即打断睡眠并重新计时。
+- 待机睡眠：连续空闲 30 秒后自动入睡（`sleep` 帧动画，500ms 间隔），之后一直睡；**点击宠物唤醒**回 `default` 并重新计时，再空闲 30 秒又入睡。任何工具调用、思考或报错也会打断睡眠并重新计时。
 - 每个动作两种配置：`"动作": "图片.png"`（静态）或 `"动作": { "imgs": [...], "delay": 1000 }`（帧动画，delay 毫秒，缺省 500）。
 - 热更新：改图或改 `manifest.json`，3~4 秒生效，无需重启。
 - 可拖拽（视口内钳制）、悬停 `−/+` 调尺寸（100~320px）、点击冒状态气泡、`×` 隐藏 / 🐾 唤回。
@@ -105,14 +105,15 @@ assets/
 
 ## 工作原理
 
-Host 半提供四个路由：
+Host 半提供五个路由：
 
 | 路由 | 返回 |
 |---|---|
-| `/dsh-pet-in-frame/state` | `{ status, action, tool, error, rev }` |
+| `/dsh-pet-in-frame/state` | `{ status, action, tool, error, idleMs, rev }` |
 | `/dsh-pet-in-frame/texts` | 各动作的气泡文案 |
 | `/dsh-pet-in-frame/frames/<动作>` | `{ frames: [url...], delay }`（URL 带当前 `rev`） |
 | `/dsh-pet-in-frame/assets/<文件>` | 图片字节 |
+| `/dsh-pet-in-frame/wake` | `POST`，点击宠物时唤醒并重置待机计时 |
 
 Client 每秒轮询 `state`，`rev` 变化时重新拉帧——图片和配置改动无需刷新页面即可生效。
 
@@ -120,7 +121,7 @@ Client 每秒轮询 `state`，`rev` 变化时重新拉帧——图片和配置�
 
 - 只服务配置的素材目录；文件名必须匹配 `[\w.-]+`，无路径穿越。
 - manifest 仅用 `JSON.parse` 当数据处理，写坏只会退化到约定模式。
-- 路由全部只读 GET，客户端发来的东西不会落盘。
+- 除 `POST /wake`（只重置计时，不读请求体、不落盘）外，其余路由均为只读 GET。
 
 ## 已知的坑
 
