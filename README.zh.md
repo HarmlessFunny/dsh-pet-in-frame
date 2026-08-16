@@ -25,7 +25,8 @@
   | 动作 | 触发 | 取图 |
   |---|---|---|
   | `think` | running 且无活跃工具 | `think.png` / `{imgs:[...],delay}` |
-  | `search` | `web_search`、`web_fetch` | `search.png` |
+  | `search` | `web_fetch` | `search.png` |
+  | `learn` | `web_search`、`skill` | `learn.png` → `default.png` |
   | `read` | `read`、`glob`、`grep` | `read.png` → `search.png` → `default.png` |
   | `bash` | `bash`、`pwsh` | `bash.png` → `default.png` |
   | `edit` | `edit`、`write` | `edit.png` → `default.png` |
