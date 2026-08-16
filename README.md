@@ -30,6 +30,7 @@ The differentiator: **the assets directory is the config**. Drop a `bash.png` in
   | `bash` | `bash`, `pwsh` | `bash.png` → `default.png` |
   | `edit` | `edit`, `write` | `edit.png` → `default.png` |
   | `plan` | `todo_*`, goal, workflow | `plan.png` → `default.png` |
+  | `ask` | `ask_user_question` | `ask.png` → `default.png` |
   | `error` | `agent/error` | `error.png` → `default.png` |
   | `idle` / `default` | nothing active | `default.png` |
   | `sleep` | after 30 s of continuous idle | `sleep.png` / `{imgs:[...],delay}` |
