@@ -34,6 +34,7 @@ The differentiator: **the assets directory is the config**. Drop a `bash.png` in
   | `ask` | `ask_user_question` | `ask.png` → `default.png` |
   | `subagent` | `subagent/start`, `subagent/end` events (and tool dispatch) | `subagent.png` → `default.png` |
   | `cordis` | `cordis_define`, `cordis_run`, `cordis_stop`, `cordis_undefine`, `cordis_inspect_*` | `cordis.png` / `cordis.webp` |
+  | `permission` | while an approval request is pending (sandbox escalation / `sandbox_permissions`) | `permission.png` / `permission.webp` |
   | `error` | `agent/error` | `error.png` → `default.png` |
   | `idle` / `default` | nothing active | `default.png` |
   | `sleep` | after 30 s of continuous idle | `sleep.png` / `{imgs:[...],delay}` |
