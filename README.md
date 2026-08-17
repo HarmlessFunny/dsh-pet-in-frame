@@ -30,9 +30,9 @@ The differentiator: **the assets directory is the config**. Drop a `bash.png` in
   | `read` | `read`, `glob`, `grep` | `read.png` → `search.png` → `default.png` |
   | `bash` | `bash`, `pwsh` | `bash.png` → `default.png` |
   | `edit` | `edit`, `write` | `edit.png` → `default.png` |
-  | `plan` | `todo_*`, goal, workflow | `plan.png` / `plan.webp` |
+  | `plan` | `todo_*`, goal tools, `workflow`, and `goal/changed` events (brief flash) | `plan.png` / `plan.webp` |
   | `ask` | `ask_user_question` | `ask.png` → `default.png` |
-  | `subagent` | `subagent/start`, `subagent/end` events (and tool dispatch) | `subagent.png` → `default.png` |
+  | `subagent` | `subagent/start`, `subagent/end` events; `subagent` / `subagent_fork` / `send_message` / `interrupt_agent` / `report` tool dispatch | `subagent.png` → `default.png` |
   | `cordis` | `cordis_define`, `cordis_run`, `cordis_stop`, `cordis_undefine`, `cordis_inspect_*` | `cordis.png` / `cordis.webp` |
   | `permission` | while an approval request is pending (sandbox escalation / `sandbox_permissions`) | `permission.png` / `permission.webp` |
   | `error` | `agent/error` | `error.png` → `default.png` |
