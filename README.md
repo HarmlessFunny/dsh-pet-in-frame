@@ -4,7 +4,7 @@
 
 A single-package [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) plugin: a small desktop pet that floats in the corner of the Web GUI and reacts to what the agent is doing — thinking, searching the web, reading code, running commands, editing files, hitting an error, or idling.
 
-One package = one bundle = one loader row. The host half listens to the agent lifecycle (`agent/status`, `tools/execute`, `tools/result`, `agent/error`), watches the `assets/` directory for image and `manifest.json` changes, and serves four HTTP routes (`/dsh-pet-in-frame/state`, `/texts`, `/frames/<action>`, `/assets/<file>`). The browser half registers the pet into `shell.overlay`, polls `state`, and swaps static poses or cycles frame animations.
+One package = one bundle = one loader row. The host half listens to the agent lifecycle (`agent/status`, `tools/execute`, `tools/result`, `agent/error`), watches the `assets/` directory for image and `manifest.json` changes, and serves five HTTP routes (`/dsh-pet-in-frame/state`, `/texts`, `/frames/<action>`, `/assets/<file>`, `/wake`). The browser half registers the pet into `shell.overlay`, polls `state`, and swaps static poses or cycles frame animations.
 
 The differentiator: **the assets directory is the config**. Drop a `bash.png` into `assets/` and the pet shows it whenever a command runs; add a frame list plus one `manifest.json` line and you get an animation. No rebuild, no code change — changes hot-reload within a few seconds.
 

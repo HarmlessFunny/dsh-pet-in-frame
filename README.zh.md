@@ -4,7 +4,7 @@
 
 单包形态的 [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) 插件：一只悬浮在 Web 界面角落的小宠物，会跟着 Agent 的动静换姿态——思考、查资料、翻代码、跑命令、改文件、出错、待机。
 
-一个包 = 一个 bundle = 一行 loader 条目：host 半监听 Agent 生命周期（`agent/status`、`tools/execute`、`tools/result`、`agent/error`），盯着 `assets/` 目录里的图片和 `manifest.json` 变化，提供四个 HTTP 路由（`/dsh-pet-in-frame/state`、`/texts`、`/frames/<动作>`、`/assets/<文件>`）；浏览器半把宠物注册进 `shell.overlay`，轮询 `state`，切换静态姿态或轮播帧动画。
+一个包 = 一个 bundle = 一行 loader 条目：host 半监听 Agent 生命周期（`agent/status`、`tools/execute`、`tools/result`、`agent/error`），盯着 `assets/` 目录里的图片和 `manifest.json` 变化，提供五个 HTTP 路由（`/dsh-pet-in-frame/state`、`/texts`、`/frames/<动作>`、`/assets/<文件>`、`/wake`）；浏览器半把宠物注册进 `shell.overlay`，轮询 `state`，切换静态姿态或轮播帧动画。
 
 差异化卖点：**素材目录即配置**。往 `assets/` 丢一张 `bash.png`，跑命令时宠物自动换成它；加一组帧 + 一行 manifest，就是动画。不用构建、不用改代码，改完几秒内热更新。
 
@@ -30,14 +30,17 @@
   | `read` | `read`、`glob`、`grep` | `read.png` → `search.png` → `default.png` |
   | `bash` | `bash`、`pwsh` | `bash.png` → `default.png` |
   | `edit` | `edit`、`write` | `edit.png` → `default.png` |
-  | `plan` | `todo_*`、goal、workflow | `plan.png` → `default.png` |
+  | `plan` | `todo_*`、goal、workflow | `plan.png` / `plan.webp` |
   | `ask` | `ask_user_question` | `ask.png` → `default.png` |
   | `subagent` | `subagent/start`、`subagent/end` 事件(也含工具派发) | `subagent.png` → `default.png` |
+  | `cordis` | `cordis_define`、`cordis_run`、`cordis_stop`、`cordis_undefine`、`cordis_inspect_*` | `cordis.png` / `cordis.webp` |
+  | `permission` | 审批请求挂起期间（沙箱提权 / `sandbox_permissions`） | `permission.png` / `permission.webp` |
   | `error` | `agent/error` | `error.png` → `default.png` |
   | `idle` / `default` | 无事发生 | `default.png` |
   | `sleep` | 连续待机 30 秒后自动入睡 | `sleep.png` / `{imgs:[...],delay}` |
 
-- 子代理运行指示器：只要有子代理在运行，视口固定位置 **(58, 397)**（元素左上角）会显示 `subagent_working1~3` 帧动画（500ms 间隔）；启动/结束瞬间宠物会闪现 `subagent` 姿态约 4 秒。姿态闪显与运行指示器相互独立。
+- 子代理运行指示器：只要有子代理在运行，宠物图内固定一枚徽标（左上角，约宠物宽 4.63% / 高 31.66%，尺寸约宽 26.63% × 高 36.92%——对应 1254×1254 宠物精灵图上 334×463 的徽标），轮播 `subagent_working1~3` 帧动画（500ms 间隔）。徽标挂在宠物自己的容器里，拖拽和缩放都会跟着走。启动/结束瞬间宠物会闪现 `subagent` 姿态约 2 秒，最后一个子代理结束后徽标会多停留约 2 秒，与姿态闪显同步消失。姿态闪显与运行指示器相互独立。
+- 子代理隔离：来自存活子代理的工具调用、状态与报错事件都会被忽略——只有主 Agent 的活动能驱动宠物姿态。前台子代理跑全程时宠物保持 `subagent` 姿态，后台子代理则永远抢不走主 Agent 正在工作的姿态。
 
 - 待机睡眠：连续空闲 30 秒后自动入睡（`sleep` 帧动画，500ms 间隔），之后一直睡；**点击宠物唤醒**回 `default` 并重新计时，再空闲 30 秒又入睡。任何工具调用、思考或报错也会打断睡眠并重新计时。
 - 每个动作两种配置：`"动作": "图片.png"`（静态）或 `"动作": { "imgs": [...], "delay": 1000 }`（帧动画，delay 毫秒，缺省 500）。
