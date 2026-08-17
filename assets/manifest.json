@@ -1,9 +1,11 @@
 {
   "default": "default.webp",
+  "cordis": "cordis.webp",
   "think": {
     "imgs": ["think1.webp", "think2.webp", "think3.webp"],
     "delay": 500
   },
+  "plan": "plan.webp",
   "search": "search.webp",
   "read": "search.webp",
   "sleep": {
