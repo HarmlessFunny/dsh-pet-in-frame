@@ -1,6 +1,6 @@
 {
   "name": "dsh-pet-in-frame",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "description": "Agent desktop pet overlay for DeepSeek Harness: static or frame-animated poses that react to agent status and tool calls.",
   "type": "module",
   "main": "lib/index.js",
@@ -43,5 +43,8 @@
     "url": "https://github.com/HarmlessFunny/dsh-pet-in-frame/issues"
   },
   "homepage": "https://github.com/HarmlessFunny/dsh-pet-in-frame#readme",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "sharp": "^0.35.3"
+  }
 }

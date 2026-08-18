@@ -1,21 +1,70 @@
 {
   "default": "default.webp",
-  "cordis": "cordis.webp",
-  "permission": "permission.webp",
   "think": {
     "imgs": ["think1.webp", "think2.webp", "think3.webp"],
     "delay": 500
   },
-  "plan": "plan.webp",
-  "search": "search.webp",
-  "read": "search.webp",
   "sleep": {
     "imgs": ["sleep1.webp", "sleep2.webp", "sleep3.webp"],
     "delay": 500
   },
+  "permission": "permission.webp",
+  "plan": "plan.webp",
   "subagent": "subagent.webp",
-  "subagent_working": {
-    "imgs": ["subagent_working1.webp", "subagent_working2.webp", "subagent_working3.webp"],
+  "subagent_comp": {
+    "imgs": ["subagent_comp1.webp", "subagent_comp2.webp", "subagent_comp3.webp"],
     "delay": 500
-  }
+  },
+  "error": "oops.webp",
+
+  "command": "command.webp",
+  "bash": "command.webp",
+  "pwsh": "command.webp",
+  "bash_comp": {
+    "imgs": ["bash_comp1.webp", "bash_comp2.webp"],
+    "delay": 500
+  },
+  "pwsh_comp": {
+    "imgs": ["pwsh_comp1.webp", "pwsh_comp2.webp"],
+    "delay": 500
+  },
+  "edit": "default.webp",
+  "write": "default.webp",
+  "str_replace_editor": "default.webp",
+
+  "read": "search.webp",
+  "read_image": "search.webp",
+  "glob": "search.webp",
+  "grep": "search.webp",
+  "web_fetch": "search.webp",
+
+  "web_search": "learn.webp",
+  "skill": "learn.webp",
+
+  "todo_write": "plan.webp",
+  "create_goal": "plan.webp",
+  "update_goal": "plan.webp",
+  "get_goal": "plan.webp",
+  "workflow": "plan.webp",
+
+  "ask_user_question": "ask.webp",
+
+  "subagent_fork": "subagent.webp",
+  "send_message": "subagent.webp",
+  "interrupt_agent": "subagent.webp",
+  "list_agents": "subagent.webp",
+  "report": "subagent.webp",
+
+  "cordis_define": "cordis.webp",
+  "cordis_run": "cordis.webp",
+  "cordis_stop": "cordis.webp",
+  "cordis_undefine": "cordis.webp",
+  "cordis_inspect_list": "cordis.webp",
+  "cordis_inspect_query": "cordis.webp",
+  "cordis_inspect_self": "cordis.webp",
+
+  "job_list": "command.webp",
+  "job_output": "command.webp",
+  "job_kill": "command.webp",
+  "ralph": "default.webp"
 }

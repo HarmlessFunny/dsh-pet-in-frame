@@ -28,19 +28,22 @@ The differentiator: **the assets directory is the config**. Drop a `bash.png` in
   | `search` | `web_fetch` | `search.png` |
   | `learn` | `web_search`, `skill` | `learn.png` → `default.png` |
   | `read` | `read`, `glob`, `grep` | `read.png` → `search.png` → `default.png` |
-  | `bash` | `bash`, `pwsh` | `bash.png` → `default.png` |
+  | `bash` | `bash`, `pwsh` | `command.png` / `command.webp`, plus a pinned `bash_comp` / `pwsh_comp` badge |
   | `edit` | `edit`, `write` | `edit.png` → `default.png` |
   | `plan` | `todo_*`, goal tools, `workflow`, and `goal/changed` events (brief flash) | `plan.png` / `plan.webp` |
   | `ask` | `ask_user_question` | `ask.png` → `default.png` |
   | `subagent` | `subagent/start`, `subagent/end` events; `subagent` / `subagent_fork` / `send_message` / `interrupt_agent` / `report` tool dispatch | `subagent.png` → `default.png` |
   | `cordis` | `cordis_define`, `cordis_run`, `cordis_stop`, `cordis_undefine`, `cordis_inspect_*` | `cordis.png` / `cordis.webp` |
   | `permission` | while an approval request is pending (sandbox escalation / `sandbox_permissions`) | `permission.png` / `permission.webp` |
-  | `error` | `agent/error` | `error.png` → `default.png` |
+  | `error` | `agent/error` | `oops.png` / `oops.webp` |
   | `idle` / `default` | nothing active | `default.png` |
   | `sleep` | after 30 s of continuous idle | `sleep.png` / `{imgs:[...],delay}` |
 
-- Subagent working indicator: while any subagent is running, a badge **pinned inside the pet image** (top-left at ~4.63% / 31.66% of the pet, sized ~26.63% × 36.92% — matching a 334×463 badge on a 1254×1254 pet sprite) cycles the `subagent_working1~3` frames (500 ms interval). Because it lives inside the pet's own container it follows drag and resize. At start/end the pet flashes the `subagent` pose for ~2 s, and the badge lingers ~2 s after the last subagent settles so both disappear in sync. The pose flash and the running indicator are independent.
+- Subagent working indicator: while any subagent is running, a badge **pinned inside the pet image** (top-left at ~4.63% / 31.66% of the pet, sized ~26.63% × 36.92% — matching a 334×463 badge on a 1254×1254 pet sprite) cycles the `subagent_comp1~3` frames (500 ms interval). Because it lives inside the pet's own container it follows drag and resize. At start/end the pet flashes the `subagent` pose for ~2 s, and the badge lingers ~2 s after the last subagent settles so both disappear in sync. The pose flash and the running indicator are independent. If the main agent calls a tool during the flash, the pet switches to that tool's pose immediately (the flash is cancelled); pure thinking keeps the `subagent` pose until the window ends, then switches to `think`.
 - Subagent isolation: tool calls, status and error events **originating from live subagents are ignored** — only the main agent's activity drives the pet pose. So a foreground subagent keeps the pet in the `subagent` pose for its whole run, and a background subagent never steals the pose from the main agent's ongoing work.
+- Command badge: while the main agent runs a foreground `bash` / `pwsh` tool, the pet switches to the `command` pose and pins the matching badge inside the pet image — `bash` → `bash_comp1~2` frames, `pwsh` → `pwsh_comp1~2` frames (500 ms interval; badge top-left at 74.24% / 45.61% of the pet, sized 15.95% × 15.95%). The badge and the pose stay in sync: both hold for ~1.5 s after a quick command settles (`MIN_TOOL_SHOW_MS`), so even a sub-second command shows its badge. Shell calls from inside subagents never trigger it (subagent isolation).
+- Background commands: when the main agent dispatches `bash` / `pwsh` with `run_in_background: true`, the pet mirrors the subagent pattern — it flashes the `command` pose for ~2 s and pins the matching comp badge (`bash_comp` / `pwsh_comp`) while the job runs; when the job settles (done, errored, or killed) it flashes `command` again for ~2 s, and the badge lingers ~2 s after the last job so both disappear in sync. Job lifecycle comes from `ctx.jobs.onJobDone` (deployments without the jobs service skip background tracking; the foreground badge is unaffected).
+- Fast state polling: the client polls `/state` every 250 ms, so pose switches land within ~0.25 s (average ~0.125 s). Each tool pose (and its comp badge) is additionally held for ~1.5 s (`MIN_TOOL_SHOW_MS`) as a readable display duration, so even a sub-second tool call is visible.
 
 - Idle sleep: after 30 s of continuous idle the pet falls asleep (`sleep` frames, 500 ms interval) and stays asleep; **click the pet to wake it** back to `default` and restart the countdown — 30 s later it sleeps again. Any tool call, thinking, or error also interrupts sleep and restarts the timer.
 - Two ways to configure each action: `"action": "image.png"` (static) or `"action": { "imgs": [...], "delay": 1000 }` (frame animation, delay in ms, default 500).
@@ -123,7 +126,7 @@ The host half exposes five loopback routes:
 | `/dsh-pet-in-frame/assets/<file>` | image bytes |
 | `/dsh-pet-in-frame/wake` | `POST`; wake the pet and reset the idle countdown on click |
 
-The client polls `state` every second and refetches frames whenever `rev` changes, so image and manifest edits propagate without a reload.
+The client polls `state` every 250 ms and refetches frames whenever `rev` changes, so pose switches are near-instant and image/manifest edits propagate without a reload.
 
 ## Security
 

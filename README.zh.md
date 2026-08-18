@@ -20,27 +20,34 @@
 
 ## 特性
 
-- 姿态随 Agent 状态与工具调用自动切换：
+- 姿态随 Agent 状态与工具调用自动切换。**每个工具都是独立的姿态**：工具名即姿态键，`assets/manifest.json` 里逐个登记取哪张图（多个工具共享同一张图文件没问题，但都在 manifest 里写清楚）——代码里不做任何合并：
 
-  | 动作 | 触发 | 取图 |
+  | 触发 | manifest 条目 | 取图 |
   |---|---|---|
-  | `think` | running 且无活跃工具 | `think.png` / `{imgs:[...],delay}` |
-  | `search` | `web_fetch` | `search.png` |
-  | `learn` | `web_search`、`skill` | `learn.png` → `default.png` |
-  | `read` | `read`、`glob`、`grep` | `read.png` → `search.png` → `default.png` |
-  | `bash` | `bash`、`pwsh` | `bash.png` → `default.png` |
-  | `edit` | `edit`、`write` | `edit.png` → `default.png` |
-  | `plan` | `todo_*`、goal 工具、workflow，及 `goal/changed` 事件（短暂闪显） | `plan.png` / `plan.webp` |
-  | `ask` | `ask_user_question` | `ask.png` → `default.png` |
-  | `subagent` | `subagent/start`、`subagent/end` 事件；`subagent` / `subagent_fork` / `send_message` / `interrupt_agent` / `report` 工具派发 | `subagent.png` → `default.png` |
-  | `cordis` | `cordis_define`、`cordis_run`、`cordis_stop`、`cordis_undefine`、`cordis_inspect_*` | `cordis.png` / `cordis.webp` |
-  | `permission` | 审批请求挂起期间（沙箱提权 / `sandbox_permissions`） | `permission.png` / `permission.webp` |
-  | `error` | `agent/error` | `error.png` → `default.png` |
-  | `idle` / `default` | 无事发生 | `default.png` |
-  | `sleep` | 连续待机 30 秒后自动入睡 | `sleep.png` / `{imgs:[...],delay}` |
+  | thinking（running 且无活跃工具） | `think` | `think1~3.webp` 帧动画 |
+  | `read`、`read_image`、`glob`、`grep` | 各一条 | `search.webp` |
+  | `web_fetch` | `web_fetch` | `search.webp` |
+  | `web_search`、`skill` | 各一条 | `learn.webp` |
+  | `bash`、`pwsh` | 各一条 | `command.webp`（同时钉对应 `bash_comp`/`pwsh_comp` 徽标） |
+  | `edit`、`write`、`str_replace_editor` | 各一条 | `default.webp`（待专属图） |
+  | `todo_write`、`create_goal`、`update_goal`、`get_goal`、`workflow` | 各一条 | `plan.webp` |
+  | `goal/changed`（短闪 2s） | `plan` | `plan.webp` |
+  | `ask_user_question` | `ask_user_question` | `ask.webp` |
+  | `subagent`、`subagent_fork`、`send_message`、`interrupt_agent`、`list_agents`、`report` | 各一条 | `subagent.webp` |
+  | `subagent/start`、`subagent/end`（短闪 2s） | `subagent` | `subagent.webp` |
+  | `cordis_define`、`cordis_run`、`cordis_stop`、`cordis_undefine`、`cordis_inspect_list`、`cordis_inspect_query`、`cordis_inspect_self` | 各一条 | `cordis.webp` |
+  | `job_list`、`job_output`、`job_kill` | 各一条 | `command.webp` |
+  | `ralph`（浏览器操控） | `ralph` | `default.webp`（待专属图） |
+  | 审批请求挂起期间（沙箱提权 / `sandbox_permissions`） | `permission` | `permission.webp` |
+  | `agent/error` | `error` | `oops.webp` |
+  | 无事发生 | `default` | `default.webp` |
+  | 连续待机 30 秒后自动入睡 | `sleep` | `sleep1~3.webp` 帧动画 |
 
-- 子代理运行指示器：只要有子代理在运行，宠物图内固定一枚徽标（左上角，约宠物宽 4.63% / 高 31.66%，尺寸约宽 26.63% × 高 36.92%——对应 1254×1254 宠物精灵图上 334×463 的徽标），轮播 `subagent_working1~3` 帧动画（500ms 间隔）。徽标挂在宠物自己的容器里，拖拽和缩放都会跟着走。启动/结束瞬间宠物会闪现 `subagent` 姿态约 2 秒，最后一个子代理结束后徽标会多停留约 2 秒，与姿态闪显同步消失。姿态闪显与运行指示器相互独立。
+- 子代理运行指示器：只要有子代理在运行，宠物图内固定一枚徽标（左上角，约宠物宽 4.63% / 高 31.66%，尺寸约宽 26.63% × 高 36.92%——对应 1254×1254 宠物精灵图上 334×463 的徽标），轮播 `subagent_comp1~3` 帧动画（500ms 间隔）。徽标挂在宠物自己的容器里，拖拽和缩放都会跟着走。启动/结束瞬间宠物会闪现 `subagent` 姿态约 2 秒，最后一个子代理结束后徽标会多停留约 2 秒，与姿态闪显同步消失。姿态闪显与运行指示器相互独立。闪显期间主 Agent 若调用工具会立即切到工具姿态（闪显取消）；若只是纯思考则保持 `subagent` 直到窗口结束再切 `think`。
 - 子代理隔离：来自存活子代理的工具调用、状态与报错事件都会被忽略——只有主 Agent 的活动能驱动宠物姿态。前台子代理跑全程时宠物保持 `subagent` 姿态，后台子代理则永远抢不走主 Agent 正在工作的姿态。
+- 命令运行徽标：主 Agent 跑前台 `bash`/`pwsh` 时，宠物切到 `command` 姿态，同时在宠物图内固定对应徽标——`bash` → `bash_comp1~2` 帧动画、`pwsh` → `pwsh_comp1~2` 帧动画（500ms 间隔；徽标左上角位于宠物图 74.24% / 45.61%，尺寸 15.95% × 15.95%）。徽标与姿态同步：快速命令结束后二者都保持约 1.5 秒（`MIN_TOOL_SHOW_MS`）再消失，秒级命令也能看到徽标。子代理内部跑的 shell 不会触发（子代理隔离）。
+- 后台命令：主 Agent 用 `run_in_background: true` 派发 `bash`/`pwsh` 时，仿照子代理——宠物闪现 `command` 姿态约 2 秒，后台任务运行期间持续钉对应 comp 徽标（`bash_comp`/`pwsh_comp`）；任务结算（完成/报错/被杀）时再闪 `command` 约 2 秒，最后一个任务结束后徽标多停留约 2 秒与闪显同步消失。任务生命周期通过 `ctx.jobs` 的 `onJobDone` 感知（无此服务的部署自动跳过后台追踪，前台徽标不受影响）。
+- 快速状态轮询：宠物每 250ms 轮询一次 `/state`，姿态切换延迟 ≤ ~0.25 秒（平均 ~0.125 秒）。每个工具姿态（连同 comp 徽标）再保持约 1.5 秒（`MIN_TOOL_SHOW_MS`）作为可读的展示时长，秒级工具调用也能看清。
 
 - 待机睡眠：连续空闲 30 秒后自动入睡（`sleep` 帧动画，500ms 间隔），之后一直睡；**点击宠物唤醒**回 `default` 并重新计时，再空闲 30 秒又入睡。任何工具调用、思考或报错也会打断睡眠并重新计时。
 - 每个动作两种配置：`"动作": "图片.png"`（静态）或 `"动作": { "imgs": [...], "delay": 1000 }`（帧动画，delay 毫秒，缺省 500）。
@@ -83,31 +90,25 @@ dsh plugin --profile web add file:E:/path/to/dsh-pet-in-frame
     assetsDir: C:/path/to/your/assets
 ```
 
-**文件名约定（零配置）**——`assets/<动作>.<扩展名>`，支持 `png/jpg/jpeg/gif/webp/svg`：
-
-```
-assets/
-├── default.png   # 兜底
-├── think.png     # 思考
-├── search.png    # 查资料 / 翻代码
-└── bash.png      # 可选；缺省回退 default.png
-```
-
-**`manifest.json`**——精确控制，支持动画：
+**manifest 是逐工具的配置**——姿态键可以是任意工具名（`read`、`web_search`、`cordis_run`……）。工具名即姿态：代码不做"多个工具 → 一个姿态"的合并，共享图就写共享图：
 
 ```json
 {
-  "default": "default.png",
-  "think": { "imgs": ["think1.png", "think2.png", "think3.png"], "delay": 1000 },
-  "sleep": { "imgs": ["sleep1.png", "sleep2.png", "sleep3.png"], "delay": 500 },
-  "bash": "bash.png",
-  "read": "search.png"
+  "default": "default.webp",
+  "think": { "imgs": ["think1.webp", "think2.webp", "think3.webp"], "delay": 1000 },
+  "sleep": { "imgs": ["sleep1.webp", "sleep2.webp", "sleep3.webp"], "delay": 500 },
+  "read": "search.webp",
+  "glob": "search.webp",
+  "grep": "search.webp",
+  "web_search": "learn.webp",
+  "skill": "learn.webp"
 }
 ```
 
 - 字符串 = 静态单图；对象 `{imgs, delay}` = 帧动画。
 - 不存在的文件自动跳过；manifest 写坏了会被忽略、退回文件名约定。
-- manifest 没写的动作仍走约定 → 回退链。
+- manifest 没写的工具走约定 → 回退链。
+- 没配文案的工具，气泡统一显示"工作中…"。
 
 **素材优化**：原图通常是 1254px+ 的大图，宠物最多显示 320px，直接放会明显拖慢加载。用 `scripts/optimize-assets.cjs` 一键压成 512px WebP（体积约 1/10）并原地替换，跑完把 `manifest.json` 里的文件名改成 `.webp`。
 
@@ -123,7 +124,7 @@ Host 半提供五个路由：
 | `/dsh-pet-in-frame/assets/<文件>` | 图片字节 |
 | `/dsh-pet-in-frame/wake` | `POST`，点击宠物时唤醒并重置待机计时 |
 
-Client 每秒轮询 `state`，`rev` 变化时重新拉帧——图片和配置改动无需刷新页面即可生效。
+Client 每 250ms 轮询 `state`，`rev` 变化时重新拉帧——姿态切换近乎即时，图片和配置改动也无需刷新页面即可生效。
 
 ## 安全
 
